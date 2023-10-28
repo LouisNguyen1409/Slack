@@ -1,0 +1,80 @@
+/* base styles, feel free to edit */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fafafa;
+    height: 100%;
+    font-family: -apple-system, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.hidden {
+    display: none;
+}
+
+#dashboard-page {
+    display: flex !important;
+    flex-direction: row;
+    height: 100%;
+}
+
+#channel-list {
+    flex: 1;
+}
+
+#single-channel {
+    flex: 2;
+}
+
+.page {
+    min-height: calc(100vh - 165px);
+}
+/* .page-height {
+    height: 100vh!important;
+} */
+
+
+#message_container {
+    height: calc(100vh - 290px);
+    overflow-y: auto;
+}
+
+#channels-page {
+    height: calc(100vh - 290px);
+    overflow-y: auto;
+}
+
+#input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    background-color: #bfcdda;
+}
+
+/* #input-area {
+    font-size: 16px;
+} */
+
+#new-channel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 81px;
+    background-color: #bfcdda;
+}
+
+#msg-avatar {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+}
+
+#msg-box {
+    max-width: 50%;
+}
+
+.icon {
+    background-color: black;
+    border-radius: 100%;
+}

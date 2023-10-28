@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Slackr</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- You can add your styles and scripts here -->
+        <link rel="icon" href="assets/slack_icon.ico" />
+        <!-- This CSS is from Bootstrap (https://getbootstrap.com/)-->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" type="text/css" media="screen" href="styles/provided.css" />
+        <script type="module" src="src/helpers.js"></script>
+    </head>
+
+    <body>
+        <!-- This is an example app structure, you can modify this as much as you choose -->
+        <header class="p-3 text-bg-dark">
+            <div class="d-flex flex-wrap align-items-center justify-content-start">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <img src="./assets/slack-img.svg" alt="Slackr logo" width="60" height="60" />
+                </a>
+
+                <ul class="nav col-auto me-auto mb-2 justify-content-center mb-md-0">
+                    <li>
+                        <a href="#" class="nav-link text-white">Slackr</a>
+                    </li>
+                </ul>
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-light me-2 redirect nav-btn" redirect="login">Login</button>
+                    <button type="button" class="btn btn-warning me-3 redirect nav-btn" redirect="register">Sign-up</button>
+                </div>
+                <div class="dropdown text-end">
+                    <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="./assets/default-profile.png" alt="Default profile image" width="32" height="32" class="rounded-circle" id="profile-avatar" />
+                    </a>
+                    <ul class="dropdown-menu text-small">
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#profile-form" id="profile-action">Profile</a></li>
+                        <li>
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-channel-form">New channel</a>
+                        </li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li>
+                            <a class="dropdown-item" href="#" id="logout-button">Sign out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <main role="main" id="main">
+            <!-- app goes here -->
+            <article class="container hidden page page-height" id="login-page">
+                <div class="text-center">
+                    <img src="./assets/slack-img.svg" alt="Slack logo" width="130" />
+                </div>
+                <div class="card shadow-lg">
+                    <div class="card-body p-5">
+                        <h1 class="fs-4 card-title fw-bold mb-4">Login</h1>
+                        <form>
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" for="email">Email address</label>
+                                <input id="login-email" type="email" class="form-control" name="email" value="" required="" autofocus="" />
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="mb-2 w-100">
+                                    <label class="text-muted" for="password">Password</label>
+                                </div>
+                                <input id="login-password" type="password" class="form-control" name="password" required="" />
+                            </div>
+
+                            <div class="mt-4">
+                                <button id="login-button" class="btn btn-primary w-100 py-2" type="button">Sign in</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer py-3 border-0">
+                        <div class="text-center">
+                            Don't have an account?
+                            <a href="#" class="text-dark redirect" redirect="register">Create One</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="container hidden page page-height mb-3" id="register-page">
+                <div class="text-center">
+                    <img src="./assets/slack-img.svg" alt="Slack logo" width="130" />
+                </div>
+                <div class="card shadow-lg">
+                    <div class="card-body p-5">
+                        <h1 class="fs-4 card-title fw-bold mb-4">Register</h1>
+                        <form>
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" for="email">Email</label>
+                                <input id="register-email" type="email" class="form-control" name="email" value="" required="" autofocus="" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" for="name">Name</label>
+                                <input id="register-name" type="text" class="form-control" name="name" value="" required="" autofocus="" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" for="password">Password</label>
+                                <input id="register-password" type="password" class="form-control" name="password" required="" value="" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="mb-2 text-muted" for="password">Confirm Password</label>
+                                <input id="register-password-confirm" type="password" class="form-control" name="password" required="" value="" />
+                            </div>
+
+                            <p class="form-text text-muted mb-3">By registering you agree with our terms and condition.</p>
+
+                            <div class="mt-4">
+                                <button id="register-button" class="btn btn-primary w-100 py-2" type="button">Register</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer py-3 border-0">
+                        <div class="text-center">
+                            Already have an account?
+                            <a href="#" class="text-dark redirect" redirect="login">Login</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="hidden page page-height" id="dashboard-page" style="display: none !important">
+                <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary" id="channel-list">
+                    <a href="#" class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none">
+                        <span class="fs-5 fw-semibold">Channels</span>
+                    </a>
+                    <div class="list-group list-group-flush scrollarea border-end" id="channels-page">
+                        <!-- channels go here -->
+                    </div>
+                    <div id="new-channel" class="border-end border-top">
+                        <button type="button" class="btn btn-primary" id="new-channel-btn" data-bs-toggle="modal" data-bs-target="#create-channel-form">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-building-fill-add" viewBox="0 0 16 16">
+                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Z"></path>
+                                <path
+                                    d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7.256A4.493 4.493 0 0 0 12.5 8a4.493 4.493 0 0 0-3.59 1.787A.498.498 0 0 0 9 9.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .39-.187A4.476 4.476 0 0 0 8.027 12H6.5a.5.5 0 0 0-.5.5V16H3a1 1 0 0 1-1-1V1Zm2 1.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5Zm3 0v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z"
+                                ></path>
+                            </svg>
+                            Add New Channel
+                        </button>
+                    </div>
+                </div>
+                <div id="single-channel">
+                    <div class="d-flex flex-wrap pt-3 pb-2 justify-content-between border-bottom">
+                        <ul class="nav nav-pills" id="channel-interaction">
+                            <li class="nav-item mx-1">
+                                <button type="button" class="btn btn-outline-primary" title="Join channel" id="join-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-add-fill" viewBox="0 0 16 16">
+                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 1 1-1 0v-1h-1a.5.5 0 1 1 0-1h1v-1a.5.5 0 0 1 1 0Z"></path>
+                                        <path
+                                            d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"
+                                        ></path>
+                                        <path d="m8 3.293 4.712 4.712A4.5 4.5 0 0 0 8.758 15H3.5A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"></path>
+                                    </svg>
+                                    <span class="visually-hidden">Join channel</span>
+                                </button>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <button type="button" class="btn btn-outline-success" title="Invite to channel" id="invite-btn" data-bs-toggle="modal" data-bs-target="#invite-modal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"
+                                        ></path>
+                                    </svg>
+                                    <span class="visually-hidden">Invite to channel</span>
+                                </button>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <button type="button" class="btn btn-outline-danger" title="Leave channel" id="leave-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z"
+                                        ></path>
+                                    </svg>
+                                    <span class="visually-hidden">Leave channel</span>
+                                </button>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-pills" id="channel-info">
+                            <li class="nav-item mx-1">
+                                <button type="button" class="btn btn-outline-warning" title="Edit channel" id="edit-btn" data-bs-toggle="modal" data-bs-target="#edit-channel-form">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench-adjustable-circle-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M6.705 8.139a.25.25 0 0 0-.288-.376l-1.5.5.159.474.808-.27-.595.894a.25.25 0 0 0 .287.376l.808-.27-.595.894a.25.25 0 0 0 .287.376l1.5-.5-.159-.474-.808.27.596-.894a.25.25 0 0 0-.288-.376l-.808.27.596-.894Z"
+                                        ></path>
+                                        <path
+                                            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm-6.202-4.751 1.988-1.657a4.5 4.5 0 0 1 7.537-4.623L7.497 6.5l1 2.5 1.333 3.11c-.56.251-1.18.39-1.833.39a4.49 4.49 0 0 1-1.592-.29L4.747 14.2a7.031 7.031 0 0 1-2.949-2.951ZM12.496 8a4.491 4.491 0 0 1-1.703 3.526L9.497 8.5l2.959-1.11c.027.2.04.403.04.61Z"
+                                        ></path>
+                                    </svg>
+                                    <span class="visually-hidden">Edit channel</span>
+                                </button>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <button type="button" class="btn btn-outline-info" title="Pin messages" data-bs-toggle="modal" data-bs-target="#pin-msg-modal" id="pin-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-angle-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146z"
+                                        ></path>
+                                    </svg>
+                                    <span class="visually-hidden">Pin messages</span>
+                                </button>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <button type="button" class="btn btn-outline-info hidden" title="Channel Information" id="info-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path>
+                                    </svg>
+                                    <span class="visually-hidden">Channel Information</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="message_container" class="border list-group list-group-flush scrollarea">
+                        <!-- messages go here -->
+
+                    </div>
+                    <div id="input-container" class="border-start">
+                        <button type="button" class="btn btn-primary mx-2" id="input-msg-img-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M.002 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3zm1 9v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12zm5-6.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z"
+                                ></path>
+                            </svg>
+                        </button>
+                        <input id="input-msg-img" type="file" class="form-control hidden" value="" required="" autofocus="" accept="image/*" />
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Aa" aria-label="Input group example" aria-describedby="basic-addon1" id="input-area" />
+                            <button type="button" class="btn btn-primary me-2" id="send-txt-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"
+                                    ></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <div class="modal fade" id="error-page" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <h1 class="modal-title fs-5" id="error-title">Error</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body py-0">
+                            <p id="error-msg">Error message.</p>
+                        </div>
+                        <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                            <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="channel-info-modal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <h1 class="modal-title fs-5">Channel Information</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body py-0">
+                            Channel Name:
+                            <span id="name-channel" class="mb-1">Name.</span>
+                            <br />
+                            Channel Description:
+                            <span id="des-channel" class="mb-1">Description.</span>
+                            <br />
+                            Channel Type:
+                            <span id="type-channel" class="mb-1">Type.</span>
+                            <br />
+                            Creation timestamp:
+                            <span id="time-channel" class="mb-1">Time.</span>
+                            <br />
+                            Name of creator:
+                            <span id="creator-channel" class="mb-1">Creator.</span>
+                            <br />
+                        </div>
+                        <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                            <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="create-channel-form" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <h1 class="modal-title fs-5">Create New Channel</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form>
+                            <div class="modal-body py-0">
+                                <label class="mb-2 text-muted" for="channel-name">Channel Name</label>
+                                <input id="channel-name" type="text" class="form-control" name="channel-name" value="" required="" autofocus="" />
+                                <label class="mb-2 text-muted mt-2" for="description">Description</label>
+                                <input id="description" type="text" class="form-control mb-3" name="description" value="" required="" autofocus="" />
+                                <div class="list-group">
+                                    <label class="list-group-item d-flex gap-2">
+                                        <input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios" id="public-channel" value="" />
+                                        <span>Public</span>
+                                    </label>
+                                    <label class="list-group-item d-flex gap-2">
+                                        <input class="form-check-input flex-shrink-0" type="radio" name="listGroupRadios" id="private-channel" value="" />
+                                        <span>Private</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                                <button type="button" class="btn btn-lg btn-primary" id="create-now-btn" data-bs-dismiss="modal">Create Now!</button>
+                                <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="edit-channel-form" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <h1 class="modal-title fs-5">Edit Channel</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form>
+                            <div class="modal-body py-0">
+                                <label class="mb-2 text-muted" for="channel-name">Channel Name</label>
+                                <input id="edit-channel-name" type="text" class="form-control" name="channel-name" value="" required="" autofocus="" />
+                                <label class="mb-2 text-muted mt-2" for="description">Description</label>
+                                <input id="edit-description" type="text" class="form-control mb-3" name="description" value="" required="" autofocus="" />
+                            </div>
+                            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                                <button type="button" class="btn btn-lg btn-primary" id="edit-form-btn" data-bs-dismiss="modal">Edit</button>
+                                <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="profile-form" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <h1 class="modal-title fs-5">Your Profile</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form>
+                            <div class="modal-body py-0 px-0 d-flex justify-content-start align-items-center" id="profile-box">
+                                <img src="./assets/default-profile.png" alt="Default profile image" width="50" height="50" class="rounded-circle mx-4 my-2" id="profile-img" />
+                                <div id="info-box">
+                                    <label class="mb-2 text-muted mt-1" for="profile-username">Username (required)</label>
+                                    <input id="profile-username" type="text" class="form-control p" name="profile-username" value="" required="" autofocus="" />
+
+                                    <label class="mb-2 text-muted mt-1" for="profile-bio">Bio</label>
+                                    <input id="profile-bio" type="text" class="form-control" name="profile-bio" value="" required="" autofocus="" />
+
+                                    <label class="mb-2 text-muted mt-1" for="profile-email">New Email (required)</label>
+                                    <input id="profile-email" type="email" class="form-control" name="profile-email" value="" required="" autofocus="" placeholder=""/>
+
+                                    <label class="mb-2 text-muted mt-1" for="profile-password">
+                                        New Password (required)
+                                        <button type="button" class="btn btn-outline-light btn-sm" id="hide-show-btn" option="hide">
+                                            <img src="./assets/eye-show.svg" alt="Password Option" id="pw-img" />
+                                        </button>
+                                    </label>
+                                    <input id="profile-password" type="password" class="form-control" name="profile-password" value="" required="" autofocus="" />
+
+                                    <label class="mb-2 text-muted mt-1" for="profile-update-img">Upload Profile Image</label>
+                                    <input id="profile-update-img" type="file" class="form-control" name="profile-update-img" value="" required="" autofocus="" accept="image/*" />
+                                </div>
+                            </div>
+                            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                                <button type="button" class="btn btn-lg btn-primary" id="update-profile-btn" data-bs-dismiss="modal">Update</button>
+                                <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="profile-view" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <h1 class="modal-title fs-5">Profile</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form>
+                            <div class="modal-body py-0 px-0 d-flex justify-content-start align-items-center">
+                                <img src="./assets/default-profile.png" alt="Default profile image" width="50" height="50" class="rounded-circle mx-4 my-2" id="view-profile-img" />
+                                <div>
+                                    Username:
+                                    <span id="view-profile-name">Name.</span>
+                                    <br />
+                                    Bio:
+                                    <span id="view-profile-bio">Bio.</span>
+                                    <br />
+                                    Email:
+                                    <span id="view-profile-email">Email</span>
+                                </div>
+                            </div>
+                            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                                <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="edit-msg" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <h1 class="modal-title fs-5">Edit Message</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form>
+                            <div class="modal-body py-0">
+                                <label class="mb-2 text-muted" for="msg-edit">Message Text</label>
+                                <input id="msg-edit" type="text" class="form-control" name="msg-edit" value="" required="" autofocus="" />
+                                <label class="mb-2 text-muted" for="img-edit">Image</label>
+                                <input id="img-edit" type="file" class="form-control" name="img-edit" value="" required="" autofocus="" />
+                            </div>
+                            <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                                <button type="button" class="btn btn-lg btn-primary" id="edit-msg-submit-btn" data-bs-dismiss="modal">Edit Message!</button>
+                                <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="pin-msg-modal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <h1 class="modal-title fs-5">Pin Message</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body py-0" id="pin-msg-data"></div>
+                        <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                            <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="invite-modal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <h1 class="modal-title fs-5">Invite Users</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body py-0 list-group" id="user-invite-list"></div>
+                        <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                            <button type="button" class="btn btn-lg btn-primary" id="submit-invite-btn" data-bs-dismiss="modal">Invite!</button>
+                            <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="images-modal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow">
+                        <div class="modal-header border-bottom-0">
+                            <h1 class="modal-title fs-5" id="error-title">Images</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body py-0">
+                            <div id="carouselExample" class="carousel slide">
+                                <div class="carousel-inner" id="img-carousel-list">
+                                    <!-- images go here -->
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                            <button type="button" class="btn btn-lg btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="loading-modal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-sm">
+                    <div class="modal-content shadow">
+                        <button type="button" class="btn-close hidden" id="close-loading-btn" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button class="btn btn-primary" type="button" disabled="">
+                            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            <span role="status">Loading...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-1 border-top hidden" id="footer">
+            <div class="col-md-4 d-flex align-items-center">
+                <span class="mb-3 mb-md-0 text-body-secondary mx-4">© Slackr</span>
+            </div>
+        </footer>
+        <!-- This Javascript is from Bootstrap (https://getbootstrap.com/)-->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"
+        ></script>
+        <script type="module" src="src/main.js"></script>
+    </body>
+</html>
+
+<!-- TODO: remove init value -->
+<!--method="POST"
+    class="needs-validation"
+    novalidate=""
+    autocomplete="off" -->
